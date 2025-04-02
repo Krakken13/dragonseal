@@ -14,8 +14,8 @@ class Animator:
     def __init__(self, name: str, animation_speed: int = 150):
         self.name = name
         self.animation_speed = animation_speed
-        self.animations = dict()
         self.active = str()
+        self.animations = dict()
         self.animation_timer = 0
         self.current_frame = 0
         self.paused = False
