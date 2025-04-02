@@ -3,12 +3,14 @@ import re
 from pathlib import Path
 
 
-def extract_number(p: Path):
+def extract_number(p: Path) -> int:
     match = re.search(r'\d+', p.stem)
     return int(match.group()) if match else 0
 
 
 class Animator:
+    generic_folder = "img"
+
     def __init__(self, name: str, animation_speed: int = 150):
         self.name = name
         self.animation_speed = animation_speed
@@ -20,7 +22,7 @@ class Animator:
 
     def new(self, folder: str):
         self.animations[folder] = list()
-        path = Path(f"img/{self.name}/{folder}/")
+        path = Path(f"{self.generic_folder}/{self.name}/{folder}/")
         for frame in sorted(path.iterdir(), key=extract_number):
             self.animations[folder].append(pg.image.load(frame).convert_alpha())
 
@@ -46,11 +48,14 @@ class Animator:
         elif not self.active:
             self.active = next(iter(self.animations))
         else:
-            print(f"[Animator] couldn't find animation {animation_type}")
+            print(f"[Animator] Animation '{animation_type}' not found!")
 
     def set_frame(self, frame: int):
         if 0 <= frame < len(self.animations[self.active]):
             self.current_frame = frame
+
+    def set_generic_folder(self, folder: str):
+        self.generic_folder = folder
 
     def set_speed(self, speed: int):
         self.animation_speed = max(1, speed)
