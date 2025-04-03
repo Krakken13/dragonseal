@@ -9,16 +9,16 @@ def extract_number(p: Path) -> int:
 
 
 class Animator:
-    generic_folder = "img"
+    generic_folder: str = "img"
 
     def __init__(self, name: str, animation_speed: int = 150):
         self.name = name
         self.animation_speed = animation_speed
-        self.active = str()
-        self.animations = dict()
-        self.animation_timer = 0
-        self.current_frame = 0
-        self.paused = False
+        self.active: str = str()
+        self.animations: dict = dict()
+        self.animation_timer: int = 0
+        self.current_frame: int = 0
+        self.paused: bool = False
 
     def new(self, folder: str):
         self.animations[folder] = list()
