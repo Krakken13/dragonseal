@@ -1,7 +1,7 @@
 import pygame as pg
 import re
 from pathlib import Path
-from exceptions import *
+from core.exceptions import *
 
 
 def extract_number(p: Path) -> int:
@@ -9,11 +9,18 @@ def extract_number(p: Path) -> int:
     return int(match.group()) if match else 0
 
 
+def set_animator_folder(folder: str):
+    Animator.generic_folder = folder
+
+
 class Animator:
     generic_folder: str = "img"
 
     def __init__(self, name: str, animation_speed: int = 150):
-        self.name = name
+        self.folder = f"{self.generic_folder}/{name}/"
+        self.path = Path(self.folder)
+        if not self.path.exists() or not self.path.is_dir():
+            raise AnimatorFolderNotFoundOrIsNotDir(self.folder)
         self.animation_speed = animation_speed
         self.active: str = str()
         self.animations: dict = dict()
@@ -23,7 +30,10 @@ class Animator:
 
     def new(self, folder: str):
         self.animations[folder] = list()
-        path = Path(f"{self.generic_folder}/{self.name}/{folder}/")
+        full_folder_path = self.folder + f"{folder}/"
+        path = Path(full_folder_path)
+        if not path.exists() or not path.is_dir() or not path.iterdir():
+            raise AnimationFolderNotFoundOrIsNotDirOrEmpty(full_folder_path)
         for frame in sorted(path.iterdir(), key=extract_number):
             self.animations[folder].append(pg.image.load(frame).convert_alpha())
         if not self.active:
@@ -55,9 +65,6 @@ class Animator:
     def set_frame(self, frame: int):
         if 0 <= frame < len(self.animations[self.active]):
             self.current_frame = frame
-
-    def set_generic_folder(self, folder: str):
-        self.generic_folder = folder
 
     def set_speed(self, speed: int):
         self.animation_speed = max(1, speed)
