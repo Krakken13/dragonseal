@@ -1,6 +1,7 @@
 import pygame as pg
 import re
 from pathlib import Path
+from exceptions import *
 
 
 def extract_number(p: Path) -> int:
@@ -25,10 +26,12 @@ class Animator:
         path = Path(f"{self.generic_folder}/{self.name}/{folder}/")
         for frame in sorted(path.iterdir(), key=extract_number):
             self.animations[folder].append(pg.image.load(frame).convert_alpha())
+        if not self.active:
+            self.active = folder
 
     def animate(self, dt: int, flip_x=False, flip_y=False, loop=True, reverse=False) -> pg.Surface:
         if not self.active or self.active not in self.animations:
-            return pg.Surface((1, 1), pg.SRCALPHA)
+            raise AnimationNotSet()
 
         if not self.paused:
             self.animation_timer += dt
@@ -41,14 +44,13 @@ class Animator:
                     self.current_frame = len(self.animations[self.active]) - 1 if loop else 0
         return pg.transform.flip(self.animations[self.active][self.current_frame], flip_x, flip_y)
 
-    def set(self, animation_type: str):
+    def set(self, animation_type: str, frame: int = 0):
         if self.has_animation(animation_type):
             self.active = animation_type
-            self.reset()
-        elif not self.active:
-            self.active = next(iter(self.animations))
+            self.animation_timer = 0
+            self.current_frame = frame
         else:
-            print(f"[Animator] Animation '{animation_type}' not found!")
+            raise AnimationNotFound(animation_type)
 
     def set_frame(self, frame: int):
         if 0 <= frame < len(self.animations[self.active]):
