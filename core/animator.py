@@ -16,19 +16,31 @@ def set_animator_folder(folder: str):
 class Animator:
     generic_folder: str = "img"
 
-    def __init__(self, name: str, animation_speed: int = 150):
+    def __init__(self, name: str, animation_speed: int = 150, autocomplete: bool = True):
         self.folder = f"{self.generic_folder}/{name}/"
         self.path = Path(self.folder)
+        self.active: str = str()
         if not self.path.exists() or not self.path.is_dir():
             raise AnimatorFolderNotFoundOrIsNotDir(self.folder)
+        if autocomplete:
+            for folder in self.path.iterdir():
+                if folder.is_dir():
+                    self.new(folder)
         self.animation_speed = animation_speed
-        self.active: str = str()
-        self.animations: dict = dict()
+        self.animations: dict[str, list[pg.Surface]] = dict()
         self.animation_timer: int = 0
         self.current_frame: int = 0
         self.paused: bool = False
 
+    def __str__(self) -> str:
+        return f"Animator: {self.folder}"
+
+    def __eq__(self, other) -> bool:
+        return self.folder == other.folder
+
     def new(self, folder: str):
+        if folder in self.animations:
+            raise AnimationHaveAlreadyExists(folder)
         self.animations[folder] = list()
         full_folder_path = self.folder + f"{folder}/"
         path = Path(full_folder_path)

@@ -16,3 +16,8 @@ class AnimatorFolderNotFoundOrIsNotDir(Exception):
 class AnimationFolderNotFoundOrIsNotDirOrEmpty(Exception):
     def __init__(self, folder):
         super().__init__(f"[Animator] Animation Folder '{folder}' not found or isn't a directory or empty!")
+
+
+class AnimationHaveAlreadyExists(Exception):
+    def __init__(self, animation):
+        super().__init__(f"[Animator] Animation has already been created for '{animation}'!")
