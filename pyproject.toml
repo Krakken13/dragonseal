@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dragonseal"
+version = "0.1.0"
+description = "Framework for creating games with Pygame"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    { name = "krakken13", email = "egordragon13@gmail.com" }
+]
+dependencies = [
+    "pygame>=2.1"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Krakken13/dragonseal"
