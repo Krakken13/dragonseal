@@ -1,17 +1,16 @@
 import pygame as pg
 from pathlib import Path
-from dragonseal.core.exceptions import *
+from dragonseal.exceptions import *
 from dragonseal.core.extract_number import extract_number
 
 
 class Animator:
     def __init__(self, name: str, animation_speed: int = 150, autocomplete: bool = True, animator_folder: str = "img"):
-        self.folder = f"{animator_folder}/{name}/"
-        self.path = Path(self.folder)
+        self.path = Path(__file__).parent / animator_folder / name
         self.active: str = str()
         self.animations: dict[str, list[pg.Surface]] = dict()
         if not self.path.exists() or not self.path.is_dir():
-            raise AnimatorFolderNotFoundOrIsNotDir(self.folder)
+            raise AnimatorFolderNotFoundOrIsNotDir(self.path)
         if autocomplete:
             for folder in self.path.iterdir():
                 if folder.is_dir():
@@ -22,19 +21,18 @@ class Animator:
         self.paused: bool = False
 
     def __str__(self) -> str:
-        return f"Animator: {self.folder}"
+        return f"Animator: {self.path}"
 
     def __eq__(self, other) -> bool:
-        return self.folder == other.folder
+        return self.path == other.path
 
     def new(self, folder: str):
         if folder in self.animations:
             raise AnimationHaveAlreadyExists(folder)
         self.animations[folder]: list[pg.Surface] = list()
-        full_folder_path = self.folder + f"{folder}/"
-        path = Path(full_folder_path)
+        path = self.path / folder
         if not path.exists() or not path.is_dir() or not path.iterdir():
-            raise AnimationFolderNotFoundOrIsNotDirOrEmpty(full_folder_path)
+            raise AnimationFolderNotFoundOrIsNotDirOrEmpty(str(path))
         for frame in sorted(path.iterdir(), key=extract_number):
             self.animations[folder].append(pg.image.load(frame).convert_alpha())
         if not self.active:
@@ -98,6 +96,7 @@ class Animator:
 
     def get_active_animation(self) -> str:
         return self.active
+
 
 if __name__ == "__main__":
     animator = Animator("animator")
