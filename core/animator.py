@@ -1,25 +1,15 @@
 import pygame as pg
-import re
 from pathlib import Path
 from core.exceptions import *
-
-
-def extract_number(p: Path) -> int:
-    match = re.search(r'\d+', p.stem)
-    return int(match.group()) if match else 0
-
-
-def set_animator_folder(folder: str):
-    Animator.generic_folder = folder
+from core.extract_number import extract_number
 
 
 class Animator:
-    generic_folder: str = "img"
-
-    def __init__(self, name: str, animation_speed: int = 150, autocomplete: bool = True):
-        self.folder = f"{self.generic_folder}/{name}/"
+    def __init__(self, name: str, animation_speed: int = 150, autocomplete: bool = True, animator_folder: str = "img"):
+        self.folder = f"{animator_folder}/{name}/"
         self.path = Path(self.folder)
         self.active: str = str()
+        self.animations: dict[str, list[pg.Surface]] = dict()
         if not self.path.exists() or not self.path.is_dir():
             raise AnimatorFolderNotFoundOrIsNotDir(self.folder)
         if autocomplete:
@@ -27,7 +17,6 @@ class Animator:
                 if folder.is_dir():
                     self.new(folder)
         self.animation_speed = animation_speed
-        self.animations: dict[str, list[pg.Surface]] = dict()
         self.animation_timer: int = 0
         self.current_frame: int = 0
         self.paused: bool = False
