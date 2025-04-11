@@ -13,7 +13,8 @@ authors = [
     { name = "krakken13", email = "egordragon13@gmail.com" }
 ]
 dependencies = [
-    "pygame>=2.1"
+    "pygame>=2.6.1",
+    "pathlib>=1.0.1"
 ]
 
 [project.urls]
