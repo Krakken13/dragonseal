@@ -1,7 +1,7 @@
 import pygame as pg
 from pathlib import Path
-from core.exceptions import *
-from core.extract_number import extract_number
+from dragonseal.core.exceptions import *
+from dragonseal.core.extract_number import extract_number
 
 
 class Animator:
@@ -30,7 +30,7 @@ class Animator:
     def new(self, folder: str):
         if folder in self.animations:
             raise AnimationHaveAlreadyExists(folder)
-        self.animations[folder] = list()
+        self.animations[folder]: list[pg.Surface] = list()
         full_folder_path = self.folder + f"{folder}/"
         path = Path(full_folder_path)
         if not path.exists() or not path.is_dir() or not path.iterdir():
@@ -98,3 +98,6 @@ class Animator:
 
     def get_active_animation(self) -> str:
         return self.active
+
+if __name__ == "__main__":
+    animator = Animator("animator")
