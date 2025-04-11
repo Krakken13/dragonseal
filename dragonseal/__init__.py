@@ -1,1 +1,1 @@
-from .core.animator import Animator
+from core.animator import Animator
