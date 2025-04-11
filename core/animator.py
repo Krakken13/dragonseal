@@ -20,6 +20,7 @@ class Animator:
         self.folder = f"{self.generic_folder}/{name}/"
         self.path = Path(self.folder)
         self.active: str = str()
+        self.animations: dict[str, list[pg.Surface]] = dict()
         if not self.path.exists() or not self.path.is_dir():
             raise AnimatorFolderNotFoundOrIsNotDir(self.folder)
         if autocomplete:
@@ -27,7 +28,6 @@ class Animator:
                 if folder.is_dir():
                     self.new(folder)
         self.animation_speed = animation_speed
-        self.animations: dict[str, list[pg.Surface]] = dict()
         self.animation_timer: int = 0
         self.current_frame: int = 0
         self.paused: bool = False
