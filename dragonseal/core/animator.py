@@ -1,7 +1,7 @@
 import pygame as pg
 from pathlib import Path
 from dragonseal.exceptions import *
-from dragonseal.core.extract_number import extract_number
+from dragonseal.utils.extract_number import extract_number
 
 
 class Animator:
@@ -96,7 +96,3 @@ class Animator:
 
     def get_active_animation(self) -> str:
         return self.active
-
-
-if __name__ == "__main__":
-    animator = Animator("animator")
