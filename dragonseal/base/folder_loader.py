@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, overload, Union, Generic
 from pathlib import Path
 from dragonseal.base import T
-from dragonseal.exceptions import FolderHaveAlreadyExists, FolderNotFound
+from dragonseal.exceptions import FolderHaveAlreadyExists, FolderNotFound, FolderNotSet
 from dragonseal.utils import path_error, extract_number
 
 
@@ -58,10 +58,17 @@ class FolderLoader(ABC, Generic[T]):
         return self.folders[key if key else self.active]
 
     def get_index(self, index: int, key: str) -> T:
-        return self.get_value(key)[index]
+        return self.get_value(key if key else self.active)[index]
 
     def has(self, folder: str) -> bool:
         return folder in self.folders
+
+    def folder_error(self, folder: str):
+        if not folder:
+            raise FolderNotSet(self.active, self.__class__.__name__)
+
+        if not self.has(folder):
+            raise FolderNotFound(self.active, self.__class__.__name__)
 
     @abstractmethod
     def load(self, file: Path) -> T:

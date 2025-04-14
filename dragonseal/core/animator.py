@@ -1,6 +1,5 @@
 import pygame as pg
 from pathlib import Path
-from dragonseal.exceptions import FolderNotSet
 from dragonseal.base import FolderLoader
 
 
@@ -16,8 +15,7 @@ class Animator(FolderLoader[pg.Surface]):
         return pg.image.load(file).convert_alpha()
 
     def animate(self, dt: int, flip_x=False, flip_y=False, loop=True, reverse=False) -> pg.Surface:
-        if not self.active or self.active not in self.folders:
-            raise FolderNotSet(self.active, self.__class__.__name__)
+        self.folder_error(self.active)
 
         if not self.paused:
             self.animation_timer += dt
@@ -32,6 +30,8 @@ class Animator(FolderLoader[pg.Surface]):
 
 
     def set_frame(self, frame: int):
+        self.folder_error(self.active)
+
         if 0 <= frame < len(self.folders[self.active]):
             self.current_frame = frame
 
@@ -57,6 +57,9 @@ class Animator(FolderLoader[pg.Surface]):
 
     def get_frame(self) -> int:
         return self.current_frame
+
+    def get_frame_image(self, key: str) -> pg.Surface:
+        return self.folders[key if key else self.active][self.current_frame]
 
     def get_speed(self) -> int:
         return self.animation_speed
