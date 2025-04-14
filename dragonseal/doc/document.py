@@ -1,5 +1,4 @@
 import pygame as pg
-from dragonseal.core.selector import Selector
 from pathlib import Path
 
 

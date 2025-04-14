@@ -1,3 +1,7 @@
+from dragonseal.exceptions.path_error import PathError
+from dragonseal.exceptions.folder_not_found import FolderNotFound
+
+
 class AnimationNotFound(Exception):
     def __init__(self, animation):
         super().__init__(f"[Animator] Animation '{animation}' not found!")
@@ -24,5 +28,5 @@ class AnimationHaveAlreadyExists(Exception):
 
 
 class FolderHaveAlreadyExists(Exception):
-    def __init__(self, folder: str, module: str,):
+    def __init__(self, folder: str, module: str, ):
         super().__init__(f"[{module}] Folder '{folder}' already exists!")
