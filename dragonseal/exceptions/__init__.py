@@ -2,3 +2,4 @@ from dragonseal.exceptions.path_error import PathError
 from dragonseal.exceptions.folder_not_found import FolderNotFound
 from dragonseal.exceptions.folder_not_set import FolderNotSet
 from dragonseal.exceptions.folder_have_already_exists import FolderHaveAlreadyExists
+from dragonseal.exceptions.frame_out_of_animation import FrameOutOfAnimation
