@@ -58,7 +58,7 @@ class FolderLoader(ABC, Generic[T]):
         return self.folders[key if key else self.active]
 
     def get_index(self, index: int, key: str) -> T:
-        return self.get_value(key if key else self.active)[index]
+        return self.get_value(key if key and self.has(key) else self.active)[index]
 
     def has(self, folder: str) -> bool:
         return folder in self.folders
