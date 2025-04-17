@@ -12,6 +12,7 @@ class FolderLoader(ABC, Generic[T]):
         path_error(self.path, self.__class__.__name__, empty_check=True)
         self.folders: dict[str, list[T]] = dict()
         self.active: str = str()
+        self.active_value: list[T] = list()
         if autocomplete:
             self.autocomplete()
 
@@ -44,7 +45,7 @@ class FolderLoader(ABC, Generic[T]):
         path_error(path, self.__class__.__name__, empty_check=True)
         self.folders[name] = [self.load(file) for file in sorted(path.iterdir(), key=extract_number)]
         if not self.active:
-            self.active = name
+            self.set(name)
 
     def set(self, folder: str):
         if not self.has(folder):
@@ -54,11 +55,11 @@ class FolderLoader(ABC, Generic[T]):
     def get_key(self) -> str:
         return self.active
 
-    def get_value(self, key: str) -> list[T]:
-        return self.folders[key if key else self.active]
+    def get_value(self, folder: str = get_key()) -> list[T]:
+        return self.folders[folder]
 
-    def get_index(self, index: int, key: str) -> T:
-        return self.get_value(key if key and self.has(key) else self.active)[index]
+    def get_index(self, index: int, folder: str = get_key()) -> T:
+        return self.get_value(folder)[index]
 
     def has(self, folder: str) -> bool:
         return folder in self.folders
