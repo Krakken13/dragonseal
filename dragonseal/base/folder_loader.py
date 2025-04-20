@@ -1,3 +1,4 @@
+import asyncio
 from abc import ABC, abstractmethod
 from typing import Any, overload, Union, Generic
 from pathlib import Path
@@ -14,7 +15,7 @@ class FolderLoader(ABC, Generic[T]):
         self.active: str = str()
         self.active_value: list[T] = list()
         if autocomplete:
-            self.autocomplete()
+            asyncio.create_task(self.autocomplete())
 
     def __str__(self):
         return f"{self.__class__.__name__}: {self.path}"
@@ -22,7 +23,7 @@ class FolderLoader(ABC, Generic[T]):
     def __eq__(self, other: Any) -> bool:
         return self.path == other.path if isinstance(other, FolderLoader) else False
 
-    def autocomplete(self):
+    async def autocomplete(self):
         for folder in sorted(self.path.iterdir(), key=extract_number):
             if path_error(folder, self.__class__.__name__, empty_check=True):
                 self.new(folder)
@@ -72,5 +73,5 @@ class FolderLoader(ABC, Generic[T]):
             raise FolderNotFound(self.active, self.__class__.__name__)
 
     @abstractmethod
-    def load(self, file: Path) -> T:
+    async def load(self, file: Path) -> T:
         ...
