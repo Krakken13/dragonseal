@@ -1,2 +1,4 @@
 /.idea
 /.venv
+/dragonseal.egg-info
+/build
