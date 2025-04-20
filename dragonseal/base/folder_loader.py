@@ -2,7 +2,7 @@ import asyncio
 from abc import ABC, abstractmethod
 from typing import Any, overload, Union, Generic
 from pathlib import Path
-from dragonseal.base import T
+from dragonseal.base.constants import T
 from dragonseal.exceptions import FolderHaveAlreadyExists, FolderNotFound, FolderNotSet
 from dragonseal.utils import path_error, extract_number
 
