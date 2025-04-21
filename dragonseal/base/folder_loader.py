@@ -8,8 +8,17 @@ from dragonseal.utils import path_error, extract_number
 
 
 class FolderLoader(ABC, Generic[T]):
+    @overload
     def __init__(self, std_dir: str, name: str, autocomplete: bool):
-        self.path = Path(__file__).parent / std_dir / name
+        ...
+
+    @overload
+    def __init__(self, std_dir: Path, name: str, autocomplete: bool):
+        ...
+
+    def __init__(self, std_dir: Union[str, Path], name: str, autocomplete: bool):
+        std_dir = Path(std_dir)
+        self.path = std_dir / name if std_dir.is_absolute() else Path(__file__).parent / std_dir / name
         path_error(self.path, self.__class__.__name__, empty_check=True)
         self.folders: dict[str, list[T]] = dict()
         self.active: str = str()
@@ -56,11 +65,11 @@ class FolderLoader(ABC, Generic[T]):
     def get_key(self) -> str:
         return self.active
 
-    def get_value(self, folder: str = get_key()) -> list[T]:
-        return self.folders[folder]
+    def get_value(self, folder: str = None) -> list[T]:
+        return self.folders[self.active if folder is None else folder]
 
-    def get_index(self, index: int, folder: str = get_key()) -> T:
-        return self.get_value(folder)[index]
+    def get_index(self, index: int, folder: str = None) -> T:
+        return self.get_value(self.active if folder is None else folder)[index]
 
     def has(self, folder: str) -> bool:
         return folder in self.folders

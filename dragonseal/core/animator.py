@@ -1,11 +1,12 @@
 import pygame as pg
 from pathlib import Path
+from typing import Union
 from dragonseal.base import FolderLoader
 from dragonseal.exceptions import FrameOutOfAnimation
 
 
 class Animator(FolderLoader[pg.Surface]):
-    def __init__(self, name: str, animation_speed: int = 150, autocomplete: bool = True, animator_folder: str = "img"):
+    def __init__(self, name: str, animation_speed: int = 150, autocomplete: bool = True, animator_folder: Union[str, Path] = "img"):
         super().__init__(animator_folder, name, autocomplete)
         self.animation_speed = animation_speed
         self.animation_timer: int = 0
@@ -61,8 +62,8 @@ class Animator(FolderLoader[pg.Surface]):
     def get_frame(self) -> int:
         return self.current_frame
 
-    def get_frame_image(self, index: int = get_frame(), folder: str = super().get_key()) -> pg.Surface:
-        return super().get_index(index, folder)
+    def get_frame_image(self, index: int = None, folder: str = None) -> pg.Surface:
+        return super().get_index(self.current_frame if index is None else index, self.get_key() if folder is None else folder)
 
     def get_speed(self) -> int:
         return self.animation_speed

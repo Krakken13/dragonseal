@@ -15,7 +15,7 @@ def test_animator_load_and_animate(tmp_path: Path):
         surface.fill((i * 40, i * 40, i * 40))
         pg.image.save(surface, img_path / f"{i}.png")
 
-    animator = Animator(name="player", animator_folder=str(tmp_path / "img"))
+    animator = Animator(name="player", animator_folder=tmp_path / "img", autocomplete=False)
     animator.new("idle")
 
     assert animator.get_frame() == 0
