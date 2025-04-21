@@ -13,7 +13,7 @@ class Animator(FolderLoader[pg.Surface]):
         self.current_frame: int = 0
         self.paused: bool = False
 
-    async def load(self, file: Path) -> pg.Surface:
+    def load(self, file: Path) -> pg.Surface:
         return pg.image.load(file).convert_alpha()
 
     def animate(self, dt: int, flip_x=False, flip_y=False, loop=True, reverse=False) -> pg.Surface:

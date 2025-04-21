@@ -8,14 +8,6 @@ from dragonseal.utils import path_error, extract_number
 
 
 class FolderLoader(ABC, Generic[T]):
-    @overload
-    def __init__(self, std_dir: str, name: str, autocomplete: bool):
-        ...
-
-    @overload
-    def __init__(self, std_dir: Path, name: str, autocomplete: bool):
-        ...
-
     def __init__(self, std_dir: Union[str, Path], name: str, autocomplete: bool):
         std_dir = Path(std_dir)
         self.path = std_dir / name if std_dir.is_absolute() else Path(__file__).parent / std_dir / name
@@ -24,7 +16,7 @@ class FolderLoader(ABC, Generic[T]):
         self.active: str = str()
         self.active_value: list[T] = list()
         if autocomplete:
-            asyncio.create_task(self.autocomplete())
+            self.autocomplete()
 
     def __str__(self):
         return f"{self.__class__.__name__}: {self.path}"
@@ -32,7 +24,7 @@ class FolderLoader(ABC, Generic[T]):
     def __eq__(self, other: Any) -> bool:
         return self.path == other.path if isinstance(other, FolderLoader) else False
 
-    async def autocomplete(self):
+    def autocomplete(self):
         for folder in sorted(self.path.iterdir(), key=extract_number):
             if path_error(folder, self.__class__.__name__, empty_check=True):
                 self.new(folder)
@@ -82,5 +74,5 @@ class FolderLoader(ABC, Generic[T]):
             raise FolderNotFound(self.active, self.__class__.__name__)
 
     @abstractmethod
-    async def load(self, file: Path) -> T:
+    def load(self, file: Path) -> T:
         ...
