@@ -4,6 +4,7 @@ from dragonseal.core.animator import Animator
 from pathlib import Path
 
 pg.init()
+pg.display.set_mode((1, 1))
 
 
 def test_animator_load_and_animate(tmp_path: Path):
