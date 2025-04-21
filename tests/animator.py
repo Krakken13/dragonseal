@@ -1,7 +1,7 @@
 import pygame as pg
 import pytest
-from dragonseal.core.animator import Animator
 from pathlib import Path
+from dragonseal import Animator
 
 pg.init()
 pg.display.set_mode((1, 1))
